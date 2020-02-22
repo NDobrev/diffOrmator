@@ -49,7 +49,6 @@ class StartPanel extends React.Component {
       firstName: files[0].name,
       firstFile: files[0]
     }, ()=> {this.checkIfReady()});
-    console.log(files);
   }
 
   onLoadSecondFile(files) {
@@ -57,7 +56,6 @@ class StartPanel extends React.Component {
       secondName: files[0].name,
       secondFile: files[0]
     }, ()=> {this.checkIfReady()});
-    console.log(files);
   }
 
   onLoadTargetFile(files) {
@@ -65,7 +63,6 @@ class StartPanel extends React.Component {
       targetName: files[0].name,
       targetFile: files[0]
     }, ()=> {this.checkIfReady()});
-    console.log(files);
   }
 
   checkIfReady() {

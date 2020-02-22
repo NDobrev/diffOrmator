@@ -45,28 +45,28 @@ class App extends React.Component {
   constructor(props) {
     super();
     this.styles = props.classes;
-    this.currentDiff = 0;
+    this.currentDiff = -1;
     this.state = {
-      file1: "00",
-      file2: "00",
-      targetFile: "00",
-      scrollPosition: 0,
-      diffs: [],
-      ranges: [],
+      baseFiles: {
+        file1: "00",
+        file2: "00",
+        diffs: [],
+        ranges: [],
+      },
+
+      resultFiles: {
+        file1: "00",
+        file2: "00",
+        diffs: [],
+        ranges: [],
+      },
+
       page: STARTING,
     };
 
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", (ev) => {
-      if (ev.keyCode == 39) {
-        this.navigateToNextDiff();
-      }
-      if (ev.keyCode == 37) {
-        this.navigateToPrevDiff();
-      }
-    });
   }
 
   onSave(ev) {
@@ -84,71 +84,57 @@ class App extends React.Component {
         URL.revokeObjectURL(blobURL);
     }
 
-    let targetFile = new Uint8Array(this.state.targetFile);
-    console.log(`Target file size ${targetFile.length}`)
-    let ranges = this.state.ranges;
-    for(let r of ranges) {
-      if(r.posibleOffsets.length == 1) {
-        let offset = r.posibleOffsets[0];
-        for(let i = r.start; i < r.end; ++i) {
-          let indexInTarget = offset + i - r.start;
-          let old = targetFile[indexInTarget];
-          targetFile[indexInTarget] = this.state.file2[i];
-          console.log(`Change ${old} to ${targetFile[indexInTarget]}`);
-        }
-      }
-      else {
-       console.log(`Not solved: ${JSON.stringify(r)}`);
-      }
-    }
-    SaveBlobAs(new Blob([targetFile]), "pesho.bin");
-  }
 
-  navigateToNextDiff() {
-
-    this.currentDiff = Math.min(++this.currentDiff, this.state.ranges.length -1);
-    let offsetOfDiff = this.state.ranges[this.currentDiff].start;
-    this.setState({
-      scrollPosition: offsetOfDiff,
-    }) 
-  }
-
-  navigateToPrevDiff() {
-    this.currentDiff = Math.max(--this.currentDiff, 0);
-    let offsetOfDiff = this.state.ranges[this.currentDiff].start;
-    this.setState({
-      scrollPosition: offsetOfDiff,
-    })
-   
+    SaveBlobAs(new Blob([this.state.resultFiles.file2]), "pesho.bin");
   }
 
  onStart(files) {
-   (async () => {
-    let result = FileManimulator.calculateDifferences(
-      new Uint8Array(await files.first.arrayBuffer()),
-      new Uint8Array(await files.second.arrayBuffer()),
-      new Uint8Array(await files.target.arrayBuffer()),
-    )
-    this.setState({
-      page: DIFF
-    })
-    console.log(result);
+    (async () => {
+      let f1 = new Uint8Array(await files.first.arrayBuffer());
+      let f2 = new Uint8Array(await files.second.arrayBuffer());
+      let t = new Uint8Array(await files.target.arrayBuffer());
+
+      let diffs = FileManimulator.calculateDifferences( f1, f2);
+      diffs.ranges = FileManimulator.calculatePosibleOffsets(f1, t, diffs.ranges );
+
+      let posibleChanges = diffs.ranges.filter((r)=> { return r.posibleOffsets.length == 1})
+      .map((r) => {
+        return {
+          start: r.start,
+          end: r.end,
+          targetStart: r.posibleOffsets[0]
+        }
+      });
+
+      let resultFile = FileManimulator.renderFileFromChanges(f1, t, posibleChanges);
+
+      this.setState({
+        page: DIFF,
+        baseFiles: {
+          file1: f1,
+          file2: f2,
+          ...diffs,
+        },
+
+        resultFiles: {
+          file1: t,
+          file2: resultFile,
+          ...FileManimulator.calculateDifferences( t, resultFile),
+        },
+      })
+      
    })();
  }
-
-  updateScroll(newValue) {
-    console.log(newValue);
-    this.setState({
-      scrollPosition: newValue,
-    })
-  }
 
   renderContent() {
     switch(this.state.page) {
       case STARTING:
         return (<StartPanel onready={this.onStart.bind(this)}> </StartPanel>)
       case DIFF:
-        return (<div></div>);
+        return (<div className={this.styles.main}> 
+                  <Diff info={this.state.baseFiles}></Diff>
+                  <Diff info={this.state.resultFiles}></Diff>
+                </div>);
     }
   }
 
@@ -157,38 +143,7 @@ class App extends React.Component {
       <div>
         {this.renderContent()}
       </div>
-        /*<Box className={this.styles.main}>
-          <Button variant="contained" color="primary" onClick={this.onSave.bind(this)}>
-            Save As
-          </Button>
-          <Box className={this.styles.half}>
-            <HexViewer file={this.state.targetFile}
-            maxLines="20"
-            scrollPosition={this.state.scrollPosition}
-            onLoadFile={this.loadTargetFile.bind(this)}
-            onScrollUpdate={this.updateScroll.bind(this)}
-            ></HexViewer>
-          </Box>
-          <Box className={this.styles.half}>
-            <Box className={this.styles.diffFile}> 
-              <HexViewer diffs={this.state.diffs}
-              file={this.state.file1}
-              maxLines="10"
-              scrollPosition={this.state.scrollPosition}
-              onLoadFile={this.loadFile1.bind(this)}
-              onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
-            </Box>
-            <Box className={this.styles.verticalSpliter}></Box>
-            <Box className={this.styles.diffFile}>
-              <HexViewer diffs={this.state.diffs}
-              file={this.state.file2}
-              maxLines="10"
-              scrollPosition={this.state.scrollPosition}
-              onLoadFile={this.loadFile2.bind(this)}
-              onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
-            </Box>
-        </Box>
-        </Box>*/
+
     );
   }
 }

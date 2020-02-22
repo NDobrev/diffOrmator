@@ -60,18 +60,30 @@ class FileManimulator
       }
     }
 
-
-    ranges = ranges.map( range => {
-      return {...range
-              , ...FileManimulator.findPossiblePositionst(file1, targetFile, range.start)
-      };
-    });
-
-    console.log(ranges);
     return {
       diffs: diffs,
-      ranges: ranges,
+      ranges: ranges
+    };
+  }
+
+ static calculatePosibleOffsets(file, targetFile, ranges) {
+    return ranges.map( range => {
+      return { ...range,
+               ...FileManimulator.findPossiblePositionst(file, targetFile, range.start)
+      };
+    });
+  }
+
+  static renderFileFromChanges(from, to, changes) {
+    let targetFile = new Uint8Array(to);
+    for(let ch of changes) {
+        for(let i = ch.start; i < ch.end; ++i) {
+          let indexInTarget = ch.targetStart + i - ch.start;
+          let old = targetFile[indexInTarget];
+          targetFile[indexInTarget] = from;
+        }
     }
+    return targetFile;
   }
 }
 

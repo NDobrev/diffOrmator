@@ -38,15 +38,13 @@ const styles = {
 class Diff extends React.Component {
   constructor(props) {
     super();
+    console.log(props);
     this.styles = props.classes;
     this.currentDiff = 0;
     this.state = {
-      file1: props.file1,
-      file2: props.file2,
+      ...props.info,
       scrollPosition: 0,
-      diffs: [],
     };
-    this.calculateDifferences();
   }
 
   componentDidMount() {
@@ -60,51 +58,12 @@ class Diff extends React.Component {
     });
   }
 
-  calculateDifferences() {
-    let file1 = new Uint8Array(this.state.file1);
-    let file2 = new Uint8Array(this.state.file2);
-
-    if (file1.length != file2.length) {
-      return;
-    }
-    let diffs = [];
-    for(let i = 0; i < file1.byteLength; ++i) {
-      if (file1[i] != file2[i]) {
-        diffs.push(i);
-      }
-    }
-
-
-    let ranges = [];
-    let currentStart = 0;
-    let maxDiff = 20;
-    let numberOfBytesBefore = maxDiff;
-    for(let i = 1; i < diffs.length; ++i) {
-      if(diffs[i] - diffs[i - 1] > maxDiff ||  i + 1 == diffs.length) {
-        ranges.push({
-          start: diffs[currentStart],
-          end: diffs[i-1],});
-        currentStart = i;
-      }
-    }
-    this.setState({
-      diffs: diffs,
-      ranges: ranges,
-    }, () => {
-      this.navigateToPrevDiff();
-    })
-  }
-
   componentWillReceiveProps(props) {
-        this.setState({
-            file1: props.file1,
-            file2: props.file2,
-            scrollPosition: 0,
-            diffs: [] },
-            () => {
-                this.calculateDifferences();
-            }
-        );
+      console.log(props);
+      this.setState({
+      ...props.info,
+      scrollPosition: 0,
+      });
     }
 
 

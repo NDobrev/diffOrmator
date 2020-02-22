@@ -87,43 +87,31 @@ class HexViewer extends Component {
     constructor(props) {
         super();
         this.styles = props.classes;
-        this.onLoadFile = props.onLoadFile;
         this.onScrollUpdate = props.onScrollUpdate;
-        this.state = {
-             file: [0],
-             diffs: [],
-             bytes: ["00"],
-             offsets: ["0x0000000000"],
-             values: ["."],
-             maxLines: props.maxLines ? props.maxLines : 25,
-             sliderValue: 0,
-             currentStart: 0,
-             numberOfLines: 1
-        };
+        this.state = this.renderState(props);
     }
 
-    componentWillReceiveProps(props) {
-        //console.log(Math.floor(props.scrollPosition / numberOfBytesPerLine));
-        this.setState({
+    renderState(props) {
+        let newState = {
             file: props.file,
             currentStart: Math.floor(props.scrollPosition / numberOfBytesPerLine) * numberOfBytesPerLine,
             diffs: props.diffs ? props.diffs : [],
             numberOfLines: (Math.floor(props.file.byteLength /numberOfBytesPerLine) + 1),
-            sliderValue: Math.floor(props.scrollPosition / numberOfBytesPerLine), },
-            () => {
-                this.setContent();
-            }
-        );
+            maxLines: props.maxLines ? props.maxLines : 25,
+        };
+        return {
+            ...newState,
+            ...this.generateContentContent(newState.currentStart, newState.file, newState.maxLines)
+        }
     }
 
-    // scrollContent(event, newValue) {
-    //     this.onScrollUpdate((this.state.numberOfLines - newValue) * numberOfBytesPerLine);
-    // }
+    componentWillReceiveProps(props) {
+        this.setState(this.renderState(props));
+    }
 
-    setContent() {
-        const currentStart = this.state.currentStart;
-        const file = this.state.file;
-        var MaxOffsetInPage = currentStart + numberOfBytesPerLine * this.state.maxLines;
+    generateContentContent(currentStart, file, maxLines) {
+
+        var MaxOffsetInPage = currentStart + numberOfBytesPerLine * maxLines;
 
         if (file.byteLength < MaxOffsetInPage) {
             MaxOffsetInPage = file.byteLength;
@@ -138,11 +126,11 @@ class HexViewer extends Component {
         for(let i = currentStart; i < MaxOffsetInPage; i+=numberOfBytesPerLine) {
             offsets.push(decimalToHex(i));
         }
-        this.setState({
+        return {
             bytes: bytes,
             offsets: offsets,
             values: buf2txt(content),
-        });
+        };
     }
 
     isDifferent(localOffset) {
@@ -157,19 +145,6 @@ class HexViewer extends Component {
     render() {
         return (
             <div  className={this.styles.main}>
-            <AppBar position="static" className={this.styles.bar}>
-                    <Button
-                    className={this.styles.fileUpload}
-                    component="label">
-                        Upload File
-                        <input
-                            type="file"
-                            style={{ display: "none" }}
-                            onChange={ (e) => this.onLoadFile(e.target.files) }
-                        />
-                    </Button>
-            </AppBar>
-
             <Paper elevation={3} className={this.styles.content} >
                 <Box display="flex" flexGrow="1">
                  <Box className={this.styles.addressCol}>
@@ -190,15 +165,6 @@ class HexViewer extends Component {
                  </Box>
 
                 </Box>
-                {/* <Slider
-                    orientation="vertical"
-                    aria-labelledby="vertical-slider"
-                    min={0}
-                    step={numberOfBytesPerLine}
-                    max={this.state.numberOfLines}
-                    onChange={(ev, v) => {this.scrollContent(ev, v)}}
-                    value={this.state.sliderValue}
-                /> */}
             </Paper>
             </div>
         );
