@@ -7,18 +7,9 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 const numberOfBytesPerLine = 12;
 const styles = {
 
-  content: {
-    flexGrow: 0,
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    color: "text.primary"
 
-  },
   main: {
     width: "100%",
-    height: "100%", 
-    padding: "2%" 
   },
   fileUpload: {
     padding: "0px"
@@ -26,6 +17,9 @@ const styles = {
   bar: {
       height: "20px",
       minHeight: "20px",
+  },
+  devider: {
+      width: "20px",
   },
   addressCol: {
     display: "flex",
@@ -145,27 +139,24 @@ class HexViewer extends Component {
     render() {
         return (
             <div  className={this.styles.main}>
-            <Paper elevation={3} className={this.styles.content} >
                 <Box display="flex" flexGrow="1">
-                 <Box className={this.styles.addressCol}>
-                     {this.state.offsets.map(offset =>  <span className={this.styles.addressBox}>{offset}</span>)}
-                 </Box>
-                 <Divider orientation="vertical" />
-                 <Box className={this.styles.hex} >
-                     {this.state.bytes.map(
-                         (byte, offset) =>  
-                         <span id={this.state.currentStart +  offset}
-                         className={this.styles.byte + " " + this.isDifferent(offset)}>
-                             {byte}
-                             </span>)}
-                 </Box>
-                 <Divider orientation="vertical" />
-                 <Box className={this.styles.value} >
-                     {this.state.values.map(value =>  <span className={this.styles.byte}>{value}</span>)}
-                 </Box>
-
+                    <Box className={this.styles.addressCol}>
+                        {this.state.offsets.map(offset =>  <span className={this.styles.addressBox}>{offset}</span>)}
+                    </Box>
+                    <Divider orientation="vertical" className={this.styles.devider} />
+                    <Box className={this.styles.hex} >
+                        {this.state.bytes.map(
+                            (byte, offset) =>  
+                            <span id={this.state.currentStart +  offset}
+                            className={this.styles.byte + " " + this.isDifferent(offset)}>
+                                {byte}
+                                </span>)}
+                    </Box>
+                    <Divider orientation="vertical" className={this.styles.devider} />
+                    <Box className={this.styles.value} >
+                        {this.state.values.map(value =>  <span className={this.styles.byte}>{value}</span>)}
+                    </Box>
                 </Box>
-            </Paper>
             </div>
         );
     }

@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, ButtonGroup, Paper, Icon } from '@material-ui/core';
 
-import UploadIcon from './assets/up_load.png'; 
+import UploadIcon from './assets/upload.png'; 
 
 const styles = {
   main: {
@@ -21,7 +21,6 @@ const styles = {
     marginLeft: "10px",
     width: "20px",
     height: "20px",
-    backgroundImage: `url(${UploadIcon})`
   }
 };
 
@@ -98,7 +97,7 @@ class StartPanel extends React.Component {
                 style={{ display: "none" }}
                 onChange={ (e) => this.onLoadFirstFile(e.target.files) }
             />
-          <img  className={this.styles.fileUpload} src={require('./assets/up_load.png')}></img >
+          <img  className={this.styles.fileUpload} src={require('./assets/upload.png')}></img >
           </Button>
 
           <Button component="label">
@@ -110,7 +109,7 @@ class StartPanel extends React.Component {
                 style={{ display: "none" }}
                 onChange={ (e) => this.onLoadSecondFile(e.target.files) }
             />
-            <img  className={this.styles.fileUpload} src={require('./assets/up_load.png')}></img >
+            <img  className={this.styles.fileUpload} src={require('./assets/upload.png')}></img >
           </Button>
           <Button component="label">
               <div className={this.styles.button}>
@@ -121,7 +120,7 @@ class StartPanel extends React.Component {
                 style={{ display: "none" }}
                 onChange={ (e) => this.onLoadTargetFile(e.target.files) }
             />
-            <img  className={this.styles.fileUpload} src={require('./assets/up_load.png')}></img >
+            <img  className={this.styles.fileUpload} src={require('./assets/upload.png')}></img >
           </Button>
                   
         </ButtonGroup>

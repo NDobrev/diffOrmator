@@ -1,20 +1,16 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Box, AppBar } from '@material-ui/core';
+import { Button, Box, AppBar, Paper, ButtonGroup} from '@material-ui/core';
 import HexViewer from './HexViewer';
-
 const styles = {
   main: {
-    flexGrow: 1,
-    width: "100%",
-    height: "50%",
+    flexGrow: 0,
+    flexShrink: 0,
+    width: "650px",
     display: "flex",
-    color: "text.primary"
+    padding: "25px 5px 5px 25px"
   },
-  bar: {
-      height: "20px",
-      minHeight: "20px",
-  },
+
   half: {
     width: "100%",
     minWidth: "500px",
@@ -22,15 +18,21 @@ const styles = {
   diffFile: {
     flexGrow: 0,
     display: "flex",
-    height: "45%",
-    width: "90%",
-    marginLeft: "5%",
+
   },
-  verticalSpliter: {
-    flexGrow: 0,
+  bar: {
+    height: "20px",
+  },
+  buttonIcon: {
+    width: "20px",
+    height: "20px"
+  },
+  button: {
+    flexGrow: 1,
     display: "flex",
-    height: "10%",
-    width: "90%",
+  },
+  buttonGroup: {
+    display: "flex",
   }
 };
 
@@ -93,26 +95,39 @@ class Diff extends React.Component {
   }
   render() {
     return (
-        <Box className={this.styles.main}>
-          <Box className={this.styles.half}>
-            <Box className={this.styles.diffFile}> 
-              <HexViewer diffs={this.state.diffs}
-              file={this.state.file1}
-              maxLines="10"
-              scrollPosition={this.state.scrollPosition}
-              onLoadFile={ () => {}}
-              onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
+        <Box className={this.styles.main} >
+            <Box className={this.styles.half} border={1} borderRadius="borderRadius" borderColor="primary.main">
+              <Box className={this.styles.diffFile}> 
+                <HexViewer diffs={this.state.diffs}
+                file={this.state.file1}
+                maxLines="10"
+                scrollPosition={this.state.scrollPosition}
+                onLoadFile={ () => {}}
+                onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
+              </Box>
+              <Box  className={this.styles.buttonGroup}
+                borderTop={1}
+                borderBottom={1}
+                borderColor="primary.main">
+                  <Button className={this.styles.button} onClick={ this.navigateToPrevDiff.bind(this) }>
+                  <img  className={this.styles.buttonIcon} src={require('./assets/left_arrow.png')}></img >
+                </Button>
+                <Button className={this.styles.button} onClick={ this.navigateToNextDiff.bind(this) }>
+                  <img  className={this.styles.buttonIcon} src={require('./assets/right_arrow.png')}></img >
+                </Button>
+                <Button className={this.styles.button}>
+                  <img  className={this.styles.buttonIcon} src={require('./assets/save.png')}></img >
+                </Button>
+              </Box>
+              <Box className={this.styles.diffFile}>
+                <HexViewer diffs={this.state.diffs}
+                file={this.state.file2}
+                maxLines="10"
+                scrollPosition={this.state.scrollPosition}
+                onLoadFile={ () => {}}
+                onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
+              </Box>
             </Box>
-            <Box className={this.styles.verticalSpliter}></Box>
-            <Box className={this.styles.diffFile}>
-              <HexViewer diffs={this.state.diffs}
-              file={this.state.file2}
-              maxLines="10"
-              scrollPosition={this.state.scrollPosition}
-              onLoadFile={ () => {}}
-              onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
-            </Box>
-        </Box>
         </Box>
     );
   }
