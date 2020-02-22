@@ -2,6 +2,9 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Box, AppBar } from '@material-ui/core';
 import HexViewer from './HexViewer';
+import Diff from './Diff';
+import StartPanel from './StartPanel'
+import FileManimulator from './FileManimulator'
 //import { connect } from 'react-redux';
 
 const styles = {
@@ -35,6 +38,8 @@ const styles = {
   }
 };
 
+const STARTING = 1;
+const DIFF =2;
 
 class App extends React.Component {
   constructor(props) {
@@ -48,6 +53,7 @@ class App extends React.Component {
       scrollPosition: 0,
       diffs: [],
       ranges: [],
+      page: STARTING,
     };
 
   }
@@ -61,99 +67,6 @@ class App extends React.Component {
         this.navigateToPrevDiff();
       }
     });
-  }
-
-  findPossiblePositionst(file, target, start, minNumberOfBytes = 4, maxNumberOfBytes = 1000) {
-
-    let executeSingleIteration = (array, target) => {
-      let result = [];
-      for (let i = 0; i < target.length - array.length; ++i) {
-        let same = true;
-        for(let j = 0; j < array.length; j++) {
-          if(target[i + j] != array[j]) {
-            same = false;
-            break;
-          }
-        }
-        if (same) {
-          result.push(i);
-        }
-      }
-      return result;
-    }
-
-    let result = [];
-    let currentBytesCount = minNumberOfBytes;
-    for(; currentBytesCount < maxNumberOfBytes; ++currentBytesCount) {
-      let array = file.slice(start - currentBytesCount, start);
-
-      let r = executeSingleIteration(array, target);
-      if (r.length == 0) {
-        break;
-      }
-      if (r.length == 1) {
-        result = r;
-        break;
-      }
-      result = r;
-    }
-    return {posibleOffsets: result, numberOfSameBytes : currentBytesCount};
-  }
-
-  calculateDifferences() {
-    let file1 = new Uint8Array(this.state.file1);
-    let file2 = new Uint8Array(this.state.file2);
-    let targetFile = new Uint8Array(this.state.targetFile);
-
-    if(this.state.file1 == "00" || this.state.file2 == "00") {
-      return;
-    }
-
-    if (file1.length != file2.length) {
-      return;
-    }
-    let diffs = [];
-    for(let i = 0; i < file1.byteLength; ++i) {
-      if (file1[i] != file2[i]) {
-        diffs.push(i);
-      }
-    }
-
-
-    let ranges = [];
-    let currentStart = 0;
-    let maxDiff = 20;
-    let numberOfBytesBefore = maxDiff;
-    for(let i = 1; i < diffs.length; ++i) {
-      if(diffs[i] - diffs[i - 1] > maxDiff ||  i + 1 == diffs.length) {
-        ranges.push({
-          start: diffs[currentStart],
-          end: diffs[i-1],});
-        currentStart = i;
-      }
-    }
-    this.setState({
-      diffs: diffs,
-      ranges: ranges,
-    }, () => {
-      this.navigateToPrevDiff();
-    })
-
-   if(targetFile == "00" || file1.length  != targetFile.length) {
-      return;
-    }
-
-    ranges = ranges.map( range => {
-      return {...range
-              , ...this.findPossiblePositionst(file1, targetFile, range.start)
-      };
-    });
-
-    this.setState({
-      diffs: diffs,
-      ranges: ranges,
-    })
-    console.log(ranges);
   }
 
   onSave(ev) {
@@ -209,36 +122,19 @@ class App extends React.Component {
    
   }
 
-  loadTargetFile(files) {
-    if(files.length == 1) {
-      files[0].arrayBuffer().then(text => this.setState({
-        targetFile: text
-      }, () => {
-        this.calculateDifferences();
-        })
-      );
-    }
-  }
-  loadFile1(files) {
-    if(files.length == 1) {
-      files[0].arrayBuffer().then(text => this.setState({
-        file1: text
-      }, () => {
-        this.calculateDifferences();
-        })
-      );
-    }
-  }
-  loadFile2(files) {
-    if(files.length == 1) {
-      files[0].arrayBuffer().then(text => this.setState({
-        file2: text
-      },  () => {
-        this.calculateDifferences();
-        })
-      );
-    }
-  }
+ onStart(files) {
+   (async () => {
+    let result = FileManimulator.calculateDifferences(
+      new Uint8Array(await files.first.arrayBuffer()),
+      new Uint8Array(await files.second.arrayBuffer()),
+      new Uint8Array(await files.target.arrayBuffer()),
+    )
+    this.setState({
+      page: DIFF
+    })
+    console.log(result);
+   })();
+ }
 
   updateScroll(newValue) {
     console.log(newValue);
@@ -246,9 +142,22 @@ class App extends React.Component {
       scrollPosition: newValue,
     })
   }
+
+  renderContent() {
+    switch(this.state.page) {
+      case STARTING:
+        return (<StartPanel onready={this.onStart.bind(this)}> </StartPanel>)
+      case DIFF:
+        return (<div></div>);
+    }
+  }
+
   render() {
     return (
-        <Box className={this.styles.main}>
+      <div>
+        {this.renderContent()}
+      </div>
+        /*<Box className={this.styles.main}>
           <Button variant="contained" color="primary" onClick={this.onSave.bind(this)}>
             Save As
           </Button>
@@ -279,7 +188,7 @@ class App extends React.Component {
               onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
             </Box>
         </Box>
-        </Box>
+        </Box>*/
     );
   }
 }

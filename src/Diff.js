@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Box, AppBar } from '@material-ui/core';
 import HexViewer from './HexViewer';
-//import { connect } from 'react-redux';
 
 const styles = {
   main: {
@@ -42,12 +41,12 @@ class Diff extends React.Component {
     this.styles = props.classes;
     this.currentDiff = 0;
     this.state = {
-      file1: "00",
-      file2: "00",
+      file1: props.file1,
+      file2: props.file2,
       scrollPosition: 0,
       diffs: [],
     };
-
+    this.calculateDifferences();
   }
 
   componentDidMount() {
@@ -64,10 +63,6 @@ class Diff extends React.Component {
   calculateDifferences() {
     let file1 = new Uint8Array(this.state.file1);
     let file2 = new Uint8Array(this.state.file2);
-   
-    if(this.state.file1 == "00" || this.state.file2 == "00") {
-      return;
-    }
 
     if (file1.length != file2.length) {
       return;
@@ -146,7 +141,7 @@ class Diff extends React.Component {
               file={this.state.file1}
               maxLines="10"
               scrollPosition={this.state.scrollPosition}
-              onLoadFile={this.loadFile1.bind(this)}
+              onLoadFile={ () => {}}
               onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
             </Box>
             <Box className={this.styles.verticalSpliter}></Box>
@@ -155,7 +150,7 @@ class Diff extends React.Component {
               file={this.state.file2}
               maxLines="10"
               scrollPosition={this.state.scrollPosition}
-              onLoadFile={this.loadFile2.bind(this)}
+              onLoadFile={ () => {}}
               onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
             </Box>
         </Box>
@@ -164,5 +159,5 @@ class Diff extends React.Component {
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(Diff);
 

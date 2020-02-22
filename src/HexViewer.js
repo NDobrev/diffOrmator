@@ -167,8 +167,8 @@ class HexViewer extends Component {
                             style={{ display: "none" }}
                             onChange={ (e) => this.onLoadFile(e.target.files) }
                         />
-                    </Button>  
-            </AppBar>   
+                    </Button>
+            </AppBar>
 
             <Paper elevation={3} className={this.styles.content} >
                 <Box display="flex" flexGrow="1">
