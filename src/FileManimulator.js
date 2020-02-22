@@ -35,7 +35,7 @@ class FileManimulator
         }
         result = r;
         }
-        return {posibleOffsets: result, numberOfSameBytes : currentBytesCount};
+        return {possibleOffsets: result, numberOfSameBytes : currentBytesCount};
     }
 
     static calculateDifferences(file1, file2, targetFile) {
@@ -66,7 +66,7 @@ class FileManimulator
     };
   }
 
- static calculatePosibleOffsets(file, targetFile, ranges) {
+ static calculatePossibleOffsets(file, targetFile, ranges) {
     return ranges.map( range => {
       return { ...range,
                ...FileManimulator.findPossiblePositionst(file, targetFile, range.start)

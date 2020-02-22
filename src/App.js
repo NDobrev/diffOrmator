@@ -5,6 +5,7 @@ import HexViewer from './HexViewer';
 import Diff from './Diff';
 import StartPanel from './StartPanel'
 import FileManimulator from './FileManimulator'
+import PossibleChangesList from './PossibleChangesList'
 //import { connect } from 'react-redux';
 
 const styles = {
@@ -95,18 +96,18 @@ class App extends React.Component {
       let t = new Uint8Array(await files.target.arrayBuffer());
 
       let diffs = FileManimulator.calculateDifferences( f1, f2);
-      diffs.ranges = FileManimulator.calculatePosibleOffsets(f1, t, diffs.ranges );
+      diffs.ranges = FileManimulator.calculatePossibleOffsets(f1, t, diffs.ranges );
 
-      let posibleChanges = diffs.ranges.filter((r)=> { return r.posibleOffsets.length == 1})
+      let possibleChanges = diffs.ranges.filter((r)=> { return r.possibleOffsets.length == 1})
       .map((r) => {
         return {
           start: r.start,
           end: r.end,
-          targetStart: r.posibleOffsets[0]
+          targetStart: r.possibleOffsets[0]
         }
       });
 
-      let resultFile = FileManimulator.renderFileFromChanges(f1, t, posibleChanges);
+      let resultFile = FileManimulator.renderFileFromChanges(f1, t, possibleChanges);
 
       this.setState({
         page: DIFF,
@@ -120,6 +121,7 @@ class App extends React.Component {
           file1: t,
           file2: resultFile,
           ...FileManimulator.calculateDifferences( t, resultFile),
+          possibleChanges: diffs.ranges,
         },
       })
       
@@ -131,10 +133,14 @@ class App extends React.Component {
       case STARTING:
         return (<StartPanel onready={this.onStart.bind(this)}> </StartPanel>)
       case DIFF:
-        return (<div className={this.styles.main}> 
-                  <Diff info={this.state.baseFiles}></Diff>
-                  <Diff info={this.state.resultFiles}></Diff>
-                </div>);
+        return (
+          <div>
+            <div className={this.styles.main}>
+              <Diff info={this.state.baseFiles}></Diff>
+              <Diff info={this.state.resultFiles}></Diff>
+            </div>
+            <PossibleChangesList changes={this.state.resultFiles.possibleChanges}/>
+          </div>);
     }
   }
 
@@ -142,6 +148,7 @@ class App extends React.Component {
     return (
       <div>
         {this.renderContent()}
+
       </div>
 
     );

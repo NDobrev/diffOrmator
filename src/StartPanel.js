@@ -2,8 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, ButtonGroup, Paper, Icon } from '@material-ui/core';
 
-
-
 import UploadIcon from './assets/up_load.png'; 
 
 const styles = {
