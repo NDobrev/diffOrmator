@@ -1,1 +1,1 @@
-# To use it  [click](https://github.com/NDobrev/sravnitel)
+# To use it  [click](https://ndobrev.github.io/sravnitel/)
