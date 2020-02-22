@@ -1,1 +1,1 @@
-# diffOrmator
+# To use it  [click](https://github.com/NDobrev/sravnitel)
