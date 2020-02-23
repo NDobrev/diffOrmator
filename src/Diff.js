@@ -42,7 +42,7 @@ class Diff extends React.Component {
     super();
     console.log(props);
     this.styles = props.classes;
-    this.currentDiff = 0;
+    this.currentDiff = -1;
     this.state = {
       ...props.info,
       scrollPosition: 0,
@@ -64,13 +64,15 @@ class Diff extends React.Component {
       console.log(props);
       this.setState({
       ...props.info,
-      scrollPosition: 0,
+        scrollPosition: 0,
       });
     }
 
 
   navigateToNextDiff() {
-
+    if (!this.state.ranges.length) {
+      return;
+    }
     this.currentDiff = Math.min(++this.currentDiff, this.state.ranges.length -1);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
     this.setState({
@@ -79,6 +81,9 @@ class Diff extends React.Component {
   }
 
   navigateToPrevDiff() {
+    if (!this.state.ranges.length) {
+      return;
+    }
     this.currentDiff = Math.max(--this.currentDiff, 0);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
     this.setState({

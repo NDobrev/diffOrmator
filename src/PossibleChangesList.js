@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { List, ListItem, Checkbox } from '@material-ui/core';
+import { List, ListItem, Checkbox, Divider } from '@material-ui/core';
 
 import GotoIcon from './assets/goto.png'; 
 
@@ -8,7 +8,7 @@ const styles = {
   root: {
     overflow: 'auto',
     maxHeight: "300px",
-    width: "500px"
+    width: "750px"
   },
 
   goto: {
@@ -51,7 +51,7 @@ class PossibleChangesList extends React.Component {
                         tabIndex={-1}
                         disableRipple
                       />
-                {`${d2h(possibleOffset)}`}
+                {`target offset: ${d2h(possibleOffset)}, similarity: ${value.numberOfSameBytes} `}
                 <img  className={this.styles.goto} src={require('./assets/goto.png')}></img >
               </ListItem>)
           })}
@@ -65,12 +65,15 @@ class PossibleChangesList extends React.Component {
         <List className={this.styles.root}>
             {this.state.changes.map((value , index) => { 
                 return (
+                    [
                     <ListItem className={this.styles.noPadding}>
                       
-                      {`${d2h(value.start)}, ${d2h(value.end)}`}
+                      {`start offset: ${d2h(value.start)}, end offset: ${d2h(value.end)}`}
                       {this.renderEntry(value)}
 
-                    </ListItem>
+                    </ListItem>,
+                    <Divider/>
+                    ]
                 )
             })}
         </List>

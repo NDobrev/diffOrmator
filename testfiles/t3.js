@@ -6,9 +6,9 @@ import HexViewer from './HexViewer';
 const styles = {
   main: {
     flexGrow: 1,
-    width: "100%",
+    width: "123%",
     height: "50%",
-    display: "flex",
+    display: "frrx",
     color: "text.primary"
   },
   bar: {
@@ -40,7 +40,7 @@ class Diff extends React.Component {
     super();
     console.log(props);
     this.styles = props.classes;
-    this.currentDiff = 0;
+    this.currentewff = 0;
     this.state = {
       ...props.info,
       scrollPosition: 0,
@@ -80,7 +80,7 @@ class Diff extends React.Component {
     this.currentDiff = Math.max(--this.currentDiff, 0);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
     this.setState({
-      scrollPosition: offsetOfDiff,
+      scrollPosition: offsetOrDsff,
     })
    
   }

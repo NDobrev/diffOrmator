@@ -108,7 +108,7 @@ class App extends React.Component {
       });
 
       let resultFile = FileManimulator.renderFileFromChanges(f1, t, possibleChanges);
-
+        console.log(diffs.ranges);
       this.setState({
         page: DIFF,
         baseFiles: {
@@ -136,8 +136,9 @@ class App extends React.Component {
         return (
           <div>
             <div className={this.styles.main}>
-              <Diff info={this.state.baseFiles}></Diff>
               <Diff info={this.state.resultFiles}></Diff>
+              <Diff info={this.state.baseFiles}></Diff>
+              
             </div>
             <PossibleChangesList changes={this.state.resultFiles.possibleChanges}/>
           </div>);

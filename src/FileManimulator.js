@@ -8,10 +8,10 @@ class FileManimulator
         for (let i = 0; i < target.length - array.length; ++i) {
             let same = true;
             for(let j = 0; j < array.length; j++) {
-            if(target[i + j] != array[j]) {
-                same = false;
-                break;
-            }
+              if(target[i + j] != array[j]) {
+                  same = false;
+                  break;
+              }
             }
             if (same) {
             result.push(i);
@@ -34,8 +34,9 @@ class FileManimulator
             break;
         }
         result = r;
-        }
-        return {possibleOffsets: result, numberOfSameBytes : currentBytesCount};
+      }
+      result = result.map((v => v + currentBytesCount));
+      return {possibleOffsets: result, numberOfSameBytes : currentBytesCount};
     }
 
     static calculateDifferences(file1, file2, targetFile) {
@@ -78,9 +79,11 @@ class FileManimulator
     let targetFile = new Uint8Array(to);
     for(let ch of changes) {
         for(let i = ch.start; i < ch.end; ++i) {
-          let indexInTarget = ch.targetStart + i - ch.start;
+          let indexInTarget = ch.targetStart;
+          console.log(indexInTarget)
+          console.log(ch.start)
           let old = targetFile[indexInTarget];
-          targetFile[indexInTarget] = from;
+          targetFile[indexInTarget] = from[i];
         }
     }
     return targetFile;
