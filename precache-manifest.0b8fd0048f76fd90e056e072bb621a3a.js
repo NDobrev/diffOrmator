@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "acec4cd9f8421ea54fc933de778a3638",
+    "revision": "2831200f52bb68b83465face8e7fedc1",
     "url": "/sravnitel/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/sravnitel/static/js/2.848c0df8.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "70ca880b519ccc06fac7",
-    "url": "/sravnitel/static/js/main.3ecfa13a.chunk.js"
+    "revision": "531147c75379bbece0a1",
+    "url": "/sravnitel/static/js/main.4aedbe74.chunk.js"
   },
   {
     "revision": "f4bc12598241efb18ab2",
