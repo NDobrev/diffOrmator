@@ -2,6 +2,8 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Box, AppBar, Paper, ButtonGroup} from '@material-ui/core';
 import HexViewer from './HexViewer';
+import NAVIGATE_TO from './GlabalEvents'
+
 const styles = {
   main: {
     flexGrow: 0,
@@ -36,13 +38,18 @@ const styles = {
   }
 };
 
-
 class Diff extends React.Component {
   constructor(props) {
     super();
     console.log(props);
     this.styles = props.classes;
     this.currentDiff = -1;
+    if (props.regiseterForNavigation) {
+      window.GlabalEventHandler.RigsterForEvent(NAVIGATE_TO, (value)=>{
+        this.updateScroll(Math.max(0, value - 24));
+      });
+    }
+
     this.state = {
       ...props.info,
       scrollPosition: 0,
@@ -61,10 +68,9 @@ class Diff extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-      console.log(props);
       this.setState({
       ...props.info,
-        scrollPosition: 0,
+        scrollPosition: props.scrollPosition ? props.scrollPosition : 0,
       });
     }
 
@@ -89,7 +95,6 @@ class Diff extends React.Component {
     this.setState({
       scrollPosition: offsetOfDiff,
     })
-   
   }
 
 
@@ -107,7 +112,6 @@ class Diff extends React.Component {
                 file={this.state.file1}
                 maxLines="10"
                 scrollPosition={this.state.scrollPosition}
-                onLoadFile={ () => {}}
                 onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
               </Box>
               <Box  className={this.styles.buttonGroup}
@@ -129,7 +133,6 @@ class Diff extends React.Component {
                 file={this.state.file2}
                 maxLines="10"
                 scrollPosition={this.state.scrollPosition}
-                onLoadFile={ () => {}}
                 onScrollUpdate={this.updateScroll.bind(this)}></HexViewer>
               </Box>
             </Box>

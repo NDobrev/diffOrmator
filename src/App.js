@@ -6,7 +6,10 @@ import Diff from './Diff';
 import StartPanel from './StartPanel'
 import FileManimulator from './FileManimulator'
 import PossibleChangesList from './PossibleChangesList'
+import GlabalEventHandler from './GlabalEvents'
 //import { connect } from 'react-redux';
+
+window.GlabalEventHandler = new GlabalEventHandler();
 
 const styles = {
   main: {
@@ -108,7 +111,6 @@ class App extends React.Component {
       });
 
       let resultFile = FileManimulator.renderFileFromChanges(f1, t, possibleChanges);
-        console.log(diffs.ranges);
       this.setState({
         page: DIFF,
         baseFiles: {
@@ -136,8 +138,8 @@ class App extends React.Component {
         return (
           <div>
             <div className={this.styles.main}>
-              <Diff info={this.state.resultFiles}></Diff>
-              <Diff info={this.state.baseFiles}></Diff>
+              <Diff info={this.state.resultFiles} regiseterForNavigation={true}></Diff>
+              <Diff info={this.state.baseFiles} scrollPosition={this.state.scrollPosition}></Diff>
               
             </div>
             <PossibleChangesList changes={this.state.resultFiles.possibleChanges}/>
