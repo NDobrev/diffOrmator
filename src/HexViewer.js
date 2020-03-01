@@ -60,6 +60,9 @@ const styles = {
   },
   diff: {
     backgroundColor: "red",
+  },
+  marked: {
+    backgroundColor: "rgba(255,165,0, 125)",
   }
 }
 
@@ -90,6 +93,7 @@ class HexViewer extends Component {
             file: props.file,
             currentStart: Math.floor(props.scrollPosition / numberOfBytesPerLine) * numberOfBytesPerLine,
             diffs: props.diffs ? props.diffs : [],
+            marked: props.marked ? props.marked : [1,2,4],
             numberOfLines: (Math.floor(props.file.byteLength /numberOfBytesPerLine) + 1),
             maxLines: props.maxLines ? props.maxLines : 25,
         };
@@ -127,12 +131,22 @@ class HexViewer extends Component {
         };
     }
 
-    isDifferent(localOffset) {
+    styleByte(localOffset) {
         let realOffset = this.state.currentStart + localOffset;
-        const found = this.state.diffs.find(element => element == realOffset);
+        let found = this.state.diffs.find(element => element == realOffset);
         if (found) {
              return this.styles.diff;
         }
+        found = this.state.marked.find(element => element == realOffset);
+        if (found) {
+             return this.styles.marked;
+        }
+        return "";
+    }
+
+    isMarked(localOffset) {
+        let realOffset = this.state.currentStart + localOffset;
+        
         return "";
     }
 
@@ -141,20 +155,20 @@ class HexViewer extends Component {
             <div  className={this.styles.main}>
                 <Box display="flex" flexGrow="1">
                     <Box className={this.styles.addressCol}>
-                        {this.state.offsets.map(offset =>  <span className={this.styles.addressBox}>{offset}</span>)}
+                        {this.state.offsets.map((offset, i) =>  <span  key={i} className={this.styles.addressBox}>{offset}</span>)}
                     </Box>
                     <Divider orientation="vertical" className={this.styles.devider} />
                     <Box className={this.styles.hex} >
                         {this.state.bytes.map(
                             (byte, offset) =>  
-                            <span id={this.state.currentStart +  offset}
-                            className={this.styles.byte + " " + this.isDifferent(offset)}>
+                            <span key={offset} id={this.state.currentStart +  offset}
+                            className={this.styles.byte + " " + this.styleByte(offset)}>
                                 {byte}
                                 </span>)}
                     </Box>
                     <Divider orientation="vertical" className={this.styles.devider} />
                     <Box className={this.styles.value} >
-                        {this.state.values.map(value =>  <span className={this.styles.byte}>{value}</span>)}
+                        {this.state.values.map((value, i) =>  <span key={i} className={this.styles.byte}>{value}</span>)}
                     </Box>
                 </Box>
             </div>

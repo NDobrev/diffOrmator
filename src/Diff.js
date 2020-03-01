@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Box, AppBar, Paper, ButtonGroup} from '@material-ui/core';
 import HexViewer from './HexViewer';
-import NAVIGATE_TO from './GlabalEvents'
+import { NAVIGATE_TO } from './GlabalEvents'
 
 const styles = {
   main: {
@@ -41,7 +41,6 @@ const styles = {
 class Diff extends React.Component {
   constructor(props) {
     super();
-    console.log(props);
     this.styles = props.classes;
     this.currentDiff = -1;
     if (props.regiseterForNavigation) {
@@ -70,7 +69,8 @@ class Diff extends React.Component {
   componentWillReceiveProps(props) {
       this.setState({
       ...props.info,
-        scrollPosition: props.scrollPosition ? props.scrollPosition : 0,
+        scrollPosition: props.scrollPosition ? props.scrollPosition : this.state.scrollPosition,
+        marked: props.marked ? props.marked : this.state.marked,
       });
     }
 
@@ -104,11 +104,13 @@ class Diff extends React.Component {
     })
   }
   render() {
+
     return (
         <Box className={this.styles.main} >
             <Box className={this.styles.half} border={1} borderRadius="borderRadius" borderColor="primary.main">
               <Box className={this.styles.diffFile}> 
                 <HexViewer diffs={this.state.diffs}
+                 marked={this.state.marked}
                 file={this.state.file1}
                 maxLines="10"
                 scrollPosition={this.state.scrollPosition}
@@ -130,6 +132,7 @@ class Diff extends React.Component {
               </Box>
               <Box className={this.styles.diffFile}>
                 <HexViewer diffs={this.state.diffs}
+                marked={this.state.marked}
                 file={this.state.file2}
                 maxLines="10"
                 scrollPosition={this.state.scrollPosition}

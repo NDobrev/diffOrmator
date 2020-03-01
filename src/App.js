@@ -6,6 +6,7 @@ import Diff from './Diff';
 import StartPanel from './StartPanel'
 import FileManimulator from './FileManimulator'
 import PossibleChangesList from './PossibleChangesList'
+import { ADD_CHANGE, REMOVE_CHANGE } from './GlabalEvents'
 import GlabalEventHandler from './GlabalEvents'
 //import { connect } from 'react-redux';
 
@@ -68,6 +69,42 @@ class App extends React.Component {
       page: STARTING,
     };
 
+    window.GlabalEventHandler.RigsterForEvent(ADD_CHANGE, (change) => {
+     let resultFiles = {...this.state.resultFiles };
+     let doneChanges = [...this.state.doneChanges ];
+     doneChanges.push(change);
+
+     resultFiles.file2 = FileManimulator.renderFileFromChanges(this.state.baseFiles.file2, resultFiles.file1.slice(0), doneChanges);
+     this.setState({
+        resultFiles: {
+          file1: resultFiles.file1 ,
+          file2: resultFiles.file2 ,
+          ...FileManimulator.calculateDifferences( resultFiles.file1, resultFiles.file2),
+          possibleChanges: resultFiles.possibleChanges,
+        },
+        doneChanges: doneChanges
+      });
+    })
+
+    window.GlabalEventHandler.RigsterForEvent(REMOVE_CHANGE, (change) => {
+     let resultFiles = {...this.state.resultFiles };
+     let doneChanges = [...this.state.doneChanges ];
+     let removeMe = doneChanges.findIndex(e => e.start == change.start );
+     console.log(removeMe);
+     doneChanges.splice(removeMe,1 );
+     resultFiles.file2 = FileManimulator.renderFileFromChanges(this.state.baseFiles.file2, resultFiles.file1.slice(0), doneChanges);
+     this.setState({
+        resultFiles: {
+          file1: resultFiles.file1 ,
+          file2: resultFiles.file2 ,
+          ...FileManimulator.calculateDifferences( resultFiles.file1, resultFiles.file2),
+          possibleChanges: resultFiles.possibleChanges,
+          marked: resultFiles.marked
+        },
+        doneChanges: doneChanges
+      });
+    })
+
   }
 
   componentDidMount() {
@@ -99,9 +136,8 @@ class App extends React.Component {
       let t = new Uint8Array(await files.target.arrayBuffer());
 
       let diffs = FileManimulator.calculateDifferences( f1, f2);
-      diffs.ranges = FileManimulator.calculatePossibleOffsets(f1, t, diffs.ranges );
-
-      let possibleChanges = diffs.ranges.filter((r)=> { return r.possibleOffsets.length == 1})
+      diffs.ranges = FileManimulator.calculatePossibleOffsets(f2, t, diffs.ranges );
+      let doneChanges = diffs.ranges.filter((r)=> { return r.possibleOffsets.length == 1})
       .map((r) => {
         return {
           start: r.start,
@@ -110,21 +146,31 @@ class App extends React.Component {
         }
       });
 
-      let resultFile = FileManimulator.renderFileFromChanges(f1, t, possibleChanges);
+      let resultFile = FileManimulator.renderFileFromChanges(f2, t, doneChanges);
+      console.log(diffs.ranges);
+      let marked = diffs.ranges.map((e) => { 
+          return [ ...e.possibleOffsets.map((p ) =>{
+            return [...Array(e.end - e.start).keys()].map( i => p + i);
+          })];
+        }).flat(Infinity);
+      console.log(marked);
       this.setState({
         page: DIFF,
         baseFiles: {
           file1: f1,
           file2: f2,
           ...diffs,
+          marked: [],
         },
-
+        
         resultFiles: {
           file1: t,
           file2: resultFile,
           ...FileManimulator.calculateDifferences( t, resultFile),
           possibleChanges: diffs.ranges,
+          marked: marked
         },
+        doneChanges: doneChanges,
       })
       
    })();

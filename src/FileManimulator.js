@@ -23,18 +23,21 @@ class FileManimulator
         let result = [];
         let currentBytesCount = minNumberOfBytes;
         for(; currentBytesCount < maxNumberOfBytes; ++currentBytesCount) {
-        let array = file.slice(start - currentBytesCount, start);
+          let array = file.slice(start - currentBytesCount, start);
 
-        let r = executeSingleIteration(array, target);
-        if (r.length == 0) {
+          let r = executeSingleIteration(array, target);
+          if (r.length == 0) {
+              break;
+          }
+          if (r.length == 1) {
+              result = r;
+              break;
+          }
+          result = r;
+          if(start - currentBytesCount <= 0) {
             break;
+          }
         }
-        if (r.length == 1) {
-            result = r;
-            break;
-        }
-        result = r;
-      }
       result = result.map((v => v + currentBytesCount));
       return {possibleOffsets: result, numberOfSameBytes : currentBytesCount};
     }
@@ -52,11 +55,17 @@ class FileManimulator
     let currentStart = 0;
     let maxDiff = 20;
     let numberOfBytesBefore = maxDiff;
+    if(diffs.length == 1) {
+      ranges.push({
+          start: diffs[currentStart],
+          end: diffs[currentStart] + 1 });
+    }
+
     for(let i = 1; i < diffs.length; ++i) {
       if(diffs[i] - diffs[i - 1] > maxDiff ||  i + 1 == diffs.length) {
         ranges.push({
           start: diffs[currentStart],
-          end: diffs[i-1],});
+          end: diffs[i-1] + 1,});
         currentStart = i;
       }
     }
@@ -78,12 +87,15 @@ class FileManimulator
   static renderFileFromChanges(from, to, changes) {
     let targetFile = new Uint8Array(to);
     for(let ch of changes) {
-        for(let i = ch.start; i < ch.end; ++i) {
-          let indexInTarget = ch.targetStart;
-          console.log(indexInTarget)
-          console.log(ch.start)
-          let old = targetFile[indexInTarget];
-          targetFile[indexInTarget] = from[i];
+        let indexInTarget = ch.targetStart;
+        let numberOfBytesToChange = ch.end - ch.start;
+        for(let i = 0; i < numberOfBytesToChange; ++i) {
+          
+          let old = targetFile[indexInTarget + i];
+          if (old!= from[ch.start + i]) {
+            //console.log(`changed byte at: ${indexInTarget + i} from ${old} to ${from[ch.start + i]}`);
+          }
+          targetFile[indexInTarget + i] = from[ch.start + i];
         }
     }
     return targetFile;

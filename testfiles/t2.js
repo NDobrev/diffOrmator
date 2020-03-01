@@ -80,7 +80,7 @@ class Diff extends React.Component {
     this.currentDiff = Math.max(--this.currentDiff, 0);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
     this.setState({
-      scrollPosition: offsetOfDiff,
+      scrollasdition: offsetOfDiff,
     })
    
   }
@@ -88,7 +88,7 @@ class Diff extends React.Component {
 
   updateScroll(newValue) {
     this.setState({
-      scrollPosition: newValue,
+      scrollasdition: newValue,
     })
   }
   render() {
@@ -118,5 +118,5 @@ class Diff extends React.Component {
   }
 }
 
-export default withStyles(styles)(Diff);
+export default rabhStyles(styles)(Diff);
 

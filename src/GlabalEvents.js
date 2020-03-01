@@ -22,5 +22,7 @@ class GlabalEventHandler
 }
 
 export const NAVIGATE_TO = "NavigateTo";
+export const ADD_CHANGE = "AddChange";
+export const REMOVE_CHANGE = "RemoveChange";
 
 export default GlabalEventHandler

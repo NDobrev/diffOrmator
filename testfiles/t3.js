@@ -66,7 +66,14 @@ class Diff extends React.Component {
       });
     }
 
-
+  navigateToPrevDiff() {
+    this.currentDiff = Math.max(--this.currentDiff, 0);
+    let offsetOfDiff = this.state.ranges[this.currentDiff].start;
+    this.setState({
+      scrollPosition: offsetOrDsff,
+    })
+   
+  }
   navigateToNextDiff() {
 
     this.currentDiff = Math.min(++this.currentDiff, this.state.ranges.length -1);
@@ -76,14 +83,7 @@ class Diff extends React.Component {
     }) 
   }
 
-  navigateToPrevDiff() {
-    this.currentDiff = Math.max(--this.currentDiff, 0);
-    let offsetOfDiff = this.state.ranges[this.currentDiff].start;
-    this.setState({
-      scrollPosition: offsetOrDsff,
-    })
-   
-  }
+
 
 
   updateScroll(newValue) {

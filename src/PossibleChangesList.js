@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { List, ListItem, Checkbox, Divider } from '@material-ui/core';
-import NAVIGATE_TO from './GlabalEvents'
+import { NAVIGATE_TO, ADD_CHANGE, REMOVE_CHANGE } from './GlabalEvents'
 import GotoIcon from './assets/goto.png'; 
 
 const styles = {
@@ -46,13 +46,28 @@ class PossibleChangesList extends React.Component {
     }
   }
 
-  handleChange(rangeIndex, offsetIndex) {
+  handleChange(rangeIndex, offsetIndex, value) {
     return (ev) =>{
       let changes = this.state.changes;
-      changes[rangeIndex].entries[offsetIndex].checked =! changes[rangeIndex].entries[offsetIndex].checked;
+      changes[rangeIndex].entries[offsetIndex].checked = ev.target.checked;
       this.setState({
         changes: changes
-      })
+      });
+
+      if(ev.target.checked) {
+        window.GlabalEventHandler.FireEvent(ADD_CHANGE, {
+          start: value.start,
+          end: value.end,
+          targetStart: value.possibleOffsets[offsetIndex]
+        });
+      }
+      else {
+        window.GlabalEventHandler.FireEvent(REMOVE_CHANGE, {
+          start: value.start,
+          end: value.end,
+          targetStart: value.possibleOffsets[offsetIndex]
+        });
+      }
     }
   }
 
@@ -68,13 +83,13 @@ class PossibleChangesList extends React.Component {
       <List className={this.styles.noPadding}>
           {
             value.entries.map((entry , index) => { 
-              return (<ListItem className={this.styles.noPadding}>
+              return (<ListItem  key={index} className={this.styles.noPadding}>
                 <Checkbox
                         edge="start"
                         checked={entry.checked}
                         tabIndex={-1}
                         disableRipple
-                        onChange={this.handleChange(rangeIndex, index)}
+                        onChange={this.handleChange(rangeIndex, index, value)}
                       />
                 {`target offset: ${d2h(entry.offset)}, similarity: ${value.numberOfSameBytes} `}
                 <img  className={this.styles.goto} src={require('./assets/goto.png')}
@@ -92,7 +107,7 @@ class PossibleChangesList extends React.Component {
             {this.state.changes.map((value , index) => { 
                 return (
                     [
-                    <ListItem className={this.styles.noPadding}>
+                    <ListItem key={index} className={this.styles.noPadding}>
                       
                       {`start offset: ${d2h(value.start)}, end offset: ${d2h(value.end)}`}
                       {this.renderEntry(value, index)}
