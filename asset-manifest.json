@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/sravnitel/static/js/main.4aedbe74.chunk.js",
-    "main.js.map": "/sravnitel/static/js/main.4aedbe74.chunk.js.map",
+    "main.js": "/sravnitel/static/js/main.081817b2.chunk.js",
+    "main.js.map": "/sravnitel/static/js/main.081817b2.chunk.js.map",
     "runtime-main.js": "/sravnitel/static/js/runtime-main.5af97f86.js",
     "runtime-main.js.map": "/sravnitel/static/js/runtime-main.5af97f86.js.map",
-    "static/js/2.848c0df8.chunk.js": "/sravnitel/static/js/2.848c0df8.chunk.js",
-    "static/js/2.848c0df8.chunk.js.map": "/sravnitel/static/js/2.848c0df8.chunk.js.map",
+    "static/js/2.814bf2e6.chunk.js": "/sravnitel/static/js/2.814bf2e6.chunk.js",
+    "static/js/2.814bf2e6.chunk.js.map": "/sravnitel/static/js/2.814bf2e6.chunk.js.map",
     "index.html": "/sravnitel/index.html",
-    "precache-manifest.0b8fd0048f76fd90e056e072bb621a3a.js": "/sravnitel/precache-manifest.0b8fd0048f76fd90e056e072bb621a3a.js",
+    "precache-manifest.c3916731838560c2b578db6193930aab.js": "/sravnitel/precache-manifest.c3916731838560c2b578db6193930aab.js",
     "service-worker.js": "/sravnitel/service-worker.js",
-    "static/js/2.848c0df8.chunk.js.LICENSE.txt": "/sravnitel/static/js/2.848c0df8.chunk.js.LICENSE.txt"
+    "static/js/2.814bf2e6.chunk.js.LICENSE.txt": "/sravnitel/static/js/2.814bf2e6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.5af97f86.js",
-    "static/js/2.848c0df8.chunk.js",
-    "static/js/main.4aedbe74.chunk.js"
+    "static/js/2.814bf2e6.chunk.js",
+    "static/js/main.081817b2.chunk.js"
   ]
 }
