@@ -107,27 +107,6 @@ class App extends React.Component {
 
   }
 
-  componentDidMount() {
-  }
-
-  onSave(ev) {
-
-    function SaveBlobAs(blob, file_name) {  
-        console.log(`Save file with size ${blob.size}`)
-        var saver = document.createElement("a");
-        var blobURL = saver.href = URL.createObjectURL(blob);
-        let body = document.body;
-    
-        saver.download = file_name;
-        body.appendChild(saver);
-        saver.dispatchEvent(new MouseEvent("click"));
-        body.removeChild(saver);
-        URL.revokeObjectURL(blobURL);
-    }
-
-
-    SaveBlobAs(new Blob([this.state.resultFiles.file2]), "pesho.bin");
-  }
 
  onStart(files) {
     (async () => {

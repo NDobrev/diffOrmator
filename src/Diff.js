@@ -103,6 +103,25 @@ class Diff extends React.Component {
       scrollPosition: newValue,
     })
   }
+
+  onSave(ev) {
+
+    function SaveBlobAs(blob, file_name) {
+        console.log(`Save file with size ${blob.size}`)
+        var saver = document.createElement("a");
+        var blobURL = saver.href = URL.createObjectURL(blob);
+        let body = document.body;
+
+        saver.download = file_name;
+        body.appendChild(saver);
+        saver.dispatchEvent(new MouseEvent("click"));
+        body.removeChild(saver);
+        URL.revokeObjectURL(blobURL);
+    }
+
+
+    SaveBlobAs(new Blob([this.state.file2]), "pesho.bin");
+  }
   render() {
 
     return (
@@ -126,7 +145,7 @@ class Diff extends React.Component {
                 <Button className={this.styles.button} onClick={ this.navigateToNextDiff.bind(this) }>
                   <img  className={this.styles.buttonIcon} src={require('./assets/right_arrow.png')}></img >
                 </Button>
-                <Button className={this.styles.button}>
+                <Button className={this.styles.button} onClick={ this.onSave.bind(this) }>
                   <img  className={this.styles.buttonIcon} src={require('./assets/save.png')}></img >
                 </Button>
               </Box>
