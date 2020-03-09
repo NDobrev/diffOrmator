@@ -45,7 +45,7 @@ class Diff extends React.Component {
     this.currentDiff = -1;
     if (props.regiseterForNavigation) {
       window.GlabalEventHandler.RigsterForEvent(NAVIGATE_TO, (value)=>{
-        this.updateScroll(Math.max(0, value - 24));
+        this.updateScroll(value);
       });
     }
 
@@ -81,9 +81,7 @@ class Diff extends React.Component {
     }
     this.currentDiff = Math.min(++this.currentDiff, this.state.ranges.length -1);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
-    this.setState({
-      scrollPosition: offsetOfDiff,
-    }) 
+    this.updateScroll(offsetOfDiff);
   }
 
   navigateToPrevDiff() {
@@ -92,15 +90,13 @@ class Diff extends React.Component {
     }
     this.currentDiff = Math.max(--this.currentDiff, 0);
     let offsetOfDiff = this.state.ranges[this.currentDiff].start;
-    this.setState({
-      scrollPosition: offsetOfDiff,
-    })
+    this.updateScroll(offsetOfDiff);
   }
 
 
   updateScroll(newValue) {
     this.setState({
-      scrollPosition: newValue,
+      scrollPosition: Math.max(0, newValue - 24),
     })
   }
 

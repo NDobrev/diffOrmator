@@ -1,7 +1,7 @@
 
 class FileManimulator
 {
-    static findPossiblePositionst(file, target, start, minNumberOfBytes = 4, maxNumberOfBytes = 1000) {
+    static findPossiblePositionst(file, target, start, minNumberOfBytes = 4, maxNumberOfBytes = 50) {
 
         let executeSingleIteration = (array, target) => {
         let result = [];
@@ -38,7 +38,7 @@ class FileManimulator
             break;
           }
         }
-      result = result.map((v => v + currentBytesCount));
+      result = result.map((v => v + Math.min(currentBytesCount, maxNumberOfBytes -1)));
       return {possibleOffsets: result, numberOfSameBytes : currentBytesCount};
     }
 

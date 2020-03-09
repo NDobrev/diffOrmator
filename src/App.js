@@ -16,7 +16,7 @@ const styles = {
   main: {
     flexGrow: 1,
     width: "100%",
-    height: "50%",
+    height: "35%",
     display: "flex",
     color: "text.primary"
   },
@@ -26,7 +26,7 @@ const styles = {
   },
   half: {
     width: "100%",
-    minWidth: "500px",
+    minWidth: "400px",
   },
   diffFile: {
     flexGrow: 0,
