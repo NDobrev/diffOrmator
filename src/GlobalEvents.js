@@ -1,5 +1,5 @@
 
-class GlabalEventHandler
+class GlobalEventHandler
 {
     constructor() {
         this.events = {};
@@ -25,4 +25,4 @@ export const NAVIGATE_TO = "NavigateTo";
 export const ADD_CHANGE = "AddChange";
 export const REMOVE_CHANGE = "RemoveChange";
 
-export default GlabalEventHandler
+export default GlobalEventHandler

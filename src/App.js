@@ -6,11 +6,12 @@ import Diff from './Diff';
 import StartPanel from './StartPanel'
 import FileManimulator from './FileManimulator'
 import PossibleChangesList from './PossibleChangesList'
-import { ADD_CHANGE, REMOVE_CHANGE } from './GlabalEvents'
-import GlabalEventHandler from './GlabalEvents'
+import { ADD_CHANGE, REMOVE_CHANGE } from './GlobalEvents'
+import GlobalEventHandler from './GlobalEvents'
 //import { connect } from 'react-redux';
 
-window.GlabalEventHandler = new GlabalEventHandler();
+window.GlobalEventHandler = new GlobalEventHandler();
+
 
 const styles = {
   main: {
@@ -69,7 +70,7 @@ class App extends React.Component {
       page: STARTING,
     };
 
-    window.GlabalEventHandler.RigsterForEvent(ADD_CHANGE, (change) => {
+    window.GlobalEventHandler.RigsterForEvent(ADD_CHANGE, (change) => {
      let resultFiles = {...this.state.resultFiles };
      let doneChanges = [...this.state.doneChanges ];
      doneChanges.push(change);
@@ -86,7 +87,7 @@ class App extends React.Component {
       });
     })
 
-    window.GlabalEventHandler.RigsterForEvent(REMOVE_CHANGE, (change) => {
+    window.GlobalEventHandler.RigsterForEvent(REMOVE_CHANGE, (change) => {
      let resultFiles = {...this.state.resultFiles };
      let doneChanges = [...this.state.doneChanges ];
      let removeMe = doneChanges.findIndex(e => e.start == change.start );

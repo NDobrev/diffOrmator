@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Box, AppBar, Paper, ButtonGroup} from '@material-ui/core';
 import HexViewer from './HexViewer';
-import { NAVIGATE_TO } from './GlabalEvents'
+import { NAVIGATE_TO } from './GlobalEvents'
 
 const styles = {
   main: {
@@ -44,7 +44,7 @@ class Diff extends React.Component {
     this.styles = props.classes;
     this.currentDiff = -1;
     if (props.regiseterForNavigation) {
-      window.GlabalEventHandler.RigsterForEvent(NAVIGATE_TO, (value)=>{
+      window.GlobalEventHandler.RigsterForEvent(NAVIGATE_TO, (value)=>{
         this.updateScroll(value);
       });
     }

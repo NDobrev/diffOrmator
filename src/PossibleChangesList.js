@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { List, ListItem, Checkbox, Divider } from '@material-ui/core';
-import { NAVIGATE_TO, ADD_CHANGE, REMOVE_CHANGE } from './GlabalEvents'
+import { NAVIGATE_TO, ADD_CHANGE, REMOVE_CHANGE } from './GlobalEvents'
 import GotoIcon from './assets/goto.png'; 
 
 const styles = {
@@ -55,14 +55,14 @@ class PossibleChangesList extends React.Component {
       });
 
       if(ev.target.checked) {
-        window.GlabalEventHandler.FireEvent(ADD_CHANGE, {
+        window.GlobalEventHandler.FireEvent(ADD_CHANGE, {
           start: value.start,
           end: value.end,
           targetStart: value.possibleOffsets[offsetIndex]
         });
       }
       else {
-        window.GlabalEventHandler.FireEvent(REMOVE_CHANGE, {
+        window.GlobalEventHandler.FireEvent(REMOVE_CHANGE, {
           start: value.start,
           end: value.end,
           targetStart: value.possibleOffsets[offsetIndex]
@@ -74,7 +74,7 @@ class PossibleChangesList extends React.Component {
   navigateTo(rangeIndex, offsetIndex) {
     return () => {
       let offset = this.state.changes[rangeIndex].entries[offsetIndex].offset;
-      window.GlabalEventHandler.FireEvent(NAVIGATE_TO, offset);
+      window.GlobalEventHandler.FireEvent(NAVIGATE_TO, offset);
     }
   }
 
