@@ -50,24 +50,14 @@ class PossibleChangesList extends React.Component {
     return (ev) =>{
       let changes = this.state.changes;
       changes[rangeIndex].entries[offsetIndex].checked = ev.target.checked;
-      this.setState({
-        changes: changes
-      });
-
-      if(ev.target.checked) {
-        window.GlobalEventHandler.FireEvent(ADD_CHANGE, {
+      this.setState({ changes: changes });
+      let action = ev.target.checked ? ADD_CHANGE : REMOVE_CHANGE;
+      let data = {
           start: value.start,
           end: value.end,
           targetStart: value.possibleOffsets[offsetIndex]
-        });
-      }
-      else {
-        window.GlobalEventHandler.FireEvent(REMOVE_CHANGE, {
-          start: value.start,
-          end: value.end,
-          targetStart: value.possibleOffsets[offsetIndex]
-        });
-      }
+      };
+      window.GlobalEventHandler.FireEvent(action, data);
     }
   }
 
