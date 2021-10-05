@@ -63,17 +63,12 @@ class StartPanel extends React.Component {
   }
 
   checkIfReady() {
-    if (!this.state.firstFile || !this.state.secondFile || !this.state.targetFile ||
-          this.state.firstFile.size != this.state.secondFile.size
-          || this.state.firstFile.size != this.state.targetFile.size) {
+    let {firstFile, secondFile, targetFile}  = this.state;
+    let allFilesAreReady = firstFile && secondFile && targetFile;
+    let allSizeAreEq =  allFilesAreReady && firstFile.size == secondFile.size && firstFile.size == targetFile.size;
       this.setState({
-        ready: false
+          ready: allFilesAreReady && allSizeAreEq
       });
-      return;
-    }
-    this.setState({
-      ready: true
-    });
   }
 
   onStart() {
